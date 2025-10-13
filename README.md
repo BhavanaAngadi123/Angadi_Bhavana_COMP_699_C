@@ -13,6 +13,9 @@ An all-in-one platform for pet owners, sitters, sellers, and community helpers: 
 - Lost & Found: reports, sightings, rewards
 - Email notifications (SMTP), OAuth2 sign-in
 
+- Application-layer package diagram: 
+
+<img width="2186" height="659" alt="image" src="https://github.com/user-attachments/assets/4e3bc581-3bcd-441b-baa3-d2d7e69461bd" />
 
 
 
