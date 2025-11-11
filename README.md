@@ -15,7 +15,8 @@ An all-in-one platform for pet owners, sitters, sellers, and community helpers: 
 
 - Application-layer package diagram: 
 
-<img width="2186" height="659" alt="image" src="https://github.com/user-attachments/assets/4e3bc581-3bcd-441b-baa3-d2d7e69461bd" />
+<img width="1199" height="778" alt="image" src="https://github.com/user-attachments/assets/9f0617b1-52d4-4e2a-a398-becf7b48b44d" />
+
 
 
 
