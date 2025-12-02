@@ -26,6 +26,7 @@ Project Setup :
 5.	Activate the virtual environment: venv\Scripts\activate
 Install Required Libraries
   In the activated environment, run:
+        pip install PyMySQL
         pip install -r requirements.txt
   This installs Flask, SQLAlchemy, and all dependencies.
 Database Setup (MySQL)
