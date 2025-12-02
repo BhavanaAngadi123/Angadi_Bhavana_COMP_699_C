@@ -18,8 +18,31 @@ An all-in-one platform for pet owners, sitters, sellers, and community helpers: 
 <img width="1199" height="778" alt="image" src="https://github.com/user-attachments/assets/9f0617b1-52d4-4e2a-a398-becf7b48b44d" />
 
 
-
-
+Project Setup : 
+1.	Download or extract the HappyTails project folder to your system.
+2.	Open Visual Studio Code -> click File -> Open Folder-> select the HappyTails folder.
+3.	Open a new terminal inside VS Code: Terminal -> New Terminal
+4.	Create a virtual environment: python -m venv venv
+5.	Activate the virtual environment: venv\Scripts\activate
+Install Required Libraries
+  In the activated environment, run:
+        pip install -r requirements.txt
+  This installs Flask, SQLAlchemy, and all dependencies.
+Database Setup (MySQL)
+1.	Open MySQL Workbench.
+2.	Connect to Local instance MySQL80.
+3.	Create the database:
+4.	CREATE DATABASE happytails;
+5.	Open your project's .env file and update:
+DATABASE_URL=mysql+pymysql://root:YOUR_PASSWORD@localhost:3306/happytails
+Replace YOUR_PASSWORD with your actual MySQL password.
+6.	Initialize database tables:  python init_db.py
+Run the Application
+- Start the application using: python app.py
+- After the server starts, open your browser and go to: http://127.0.0.1:5000
+- You should now see the HappyTails homepage.
+Stop the Application
+- Press CTRL + C in the terminal to stop the server.
 
 
 
