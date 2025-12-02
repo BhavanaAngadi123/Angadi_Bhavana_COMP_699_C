@@ -4,8 +4,3 @@ Flask-SQLAlchemy
 itsdangerous
 Werkzeug
 python-dotenv
-pip (included with Python)
-MySQL Server 8.0
-MySQL Workbench 8.0
-Visual Studio Code
-Git (optional)
