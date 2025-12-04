@@ -17,6 +17,16 @@ An all-in-one platform for pet owners, sitters, sellers, and community helpers: 
 
 <img width="1199" height="778" alt="image" src="https://github.com/user-attachments/assets/9f0617b1-52d4-4e2a-a398-becf7b48b44d" />
 
+Prerequisites
+Install the following tools on Windows before running the project:
+•	Python 3.10 or above (from python.org)
+•	pip (included with Python)
+•	MySQL Server 8.0
+•	MySQL Workbench 8.0
+•	Visual Studio Code
+•	Git (optional)
+Verify Python installation:
+python --version
 
 Project Setup : 
 1.	Download or extract the HappyTails project folder to your system.
