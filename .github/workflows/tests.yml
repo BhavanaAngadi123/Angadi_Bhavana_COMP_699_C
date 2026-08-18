@@ -28,6 +28,7 @@ jobs:
 
       - name: Run tests
         env:
+          PYTHONPATH: ${{ github.workspace }}
           DATABASE_URL: 'sqlite:///:memory:'
           SECRET_KEY: 'ci-test-secret'
-        run: pytest -q
+        run: python -m pytest -q
