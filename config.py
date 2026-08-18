@@ -5,21 +5,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Use SECRET_KEY from the environment outside local development. A random
-# per-process fallback avoids shipping a predictable secret in the repository.
 SECRET_KEY = os.getenv("SECRET_KEY") or secrets.token_hex(32)
 
-# Database
-SQLALCHEMY_DATABASE_URI = os.getenv(
-    "DATABASE_URL",
-    "sqlite:///instance/happy.db"
-)
+# Database: use a managed PostgreSQL DATABASE_URL in production.
+database_url = os.getenv("DATABASE_URL", "sqlite:///instance/happy.db")
+# Some providers still expose the legacy postgres:// scheme.
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+SQLALCHEMY_DATABASE_URI = database_url
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_ENGINE_OPTIONS = {
+    "pool_pre_ping": True,
+}
 
-# Upload folder
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "static", "uploads")
+# Local uploads remain supported for development. Production deployments should
+# move user uploads to durable object storage rather than ephemeral app disk.
+UPLOAD_FOLDER = os.getenv(
+    "UPLOAD_FOLDER",
+    os.path.join(os.getcwd(), "static", "uploads"),
+)
 
-# Mail settings
 MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
 MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
 MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", "True").lower() == "true"
