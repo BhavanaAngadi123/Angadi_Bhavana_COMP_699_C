@@ -1,3 +1,4 @@
+from collections import Counter
 from functools import wraps
 
 from flask import Blueprint, flash, redirect, render_template, session, url_for
@@ -24,17 +25,61 @@ def admin_required(f):
     return decorated
 
 
+def build_dashboard_analytics(users, pets, products, bookings, sitters):
+    """Create presentation-ready KPIs and chart data from application records."""
+    booking_status_counts = Counter((booking.status or "unknown").lower() for booking in bookings)
+    pet_species_counts = Counter((pet.species or "Unknown").title() for pet in pets)
+    sitter_status_counts = Counter(
+        (sitter.verification_status or "pending").lower() for sitter in sitters
+    )
+
+    monthly_bookings = Counter()
+    for booking in bookings:
+        if booking.created_at:
+            monthly_bookings[booking.created_at.strftime("%Y-%m")] += 1
+
+    recent_months = sorted(monthly_bookings.keys())[-6:]
+    completed_bookings = booking_status_counts.get("completed", 0)
+    total_bookings = len(bookings)
+    completion_rate = round((completed_bookings / total_bookings) * 100, 1) if total_bookings else 0
+
+    return {
+        "kpis": {
+            "owners": sum(1 for user in users if user.role == "owner"),
+            "sitters": len(sitters),
+            "pets": len(pets),
+            "products": len(products),
+            "bookings": total_bookings,
+            "completion_rate": completion_rate,
+        },
+        "booking_status": {
+            "labels": [label.title() for label in booking_status_counts.keys()],
+            "values": list(booking_status_counts.values()),
+        },
+        "pet_species": {
+            "labels": list(pet_species_counts.keys()),
+            "values": list(pet_species_counts.values()),
+        },
+        "sitter_status": {
+            "labels": [label.title() for label in sitter_status_counts.keys()],
+            "values": list(sitter_status_counts.values()),
+        },
+        "monthly_bookings": {
+            "labels": recent_months,
+            "values": [monthly_bookings[month] for month in recent_months],
+        },
+    }
+
+
 @admin_bp.route("/dashboard")
 @admin_required
 def dashboard():
     users = User.query.all()
     pets = Pet.query.options(joinedload(Pet.owner)).all()
     products = Product.query.options(joinedload(Product.seller)).all()
-    bookings = Booking.query.options(
-        joinedload(Booking.pet),
-        joinedload(Booking.sitter),
-    ).all()
+    bookings = Booking.query.options(joinedload(Booking.pet), joinedload(Booking.sitter)).all()
     sitters = Sitter.query.all()
+    analytics = build_dashboard_analytics(users, pets, products, bookings, sitters)
 
     return render_template(
         "dashboard_admin.html",
@@ -43,6 +88,7 @@ def dashboard():
         products=products,
         bookings=bookings,
         sitters=sitters,
+        analytics=analytics,
     )
 
 
@@ -64,15 +110,12 @@ def sitter_profile(sitter_id):
 @admin_required
 def verify_sitter(sitter_id, action):
     sitter = Sitter.query.get_or_404(sitter_id)
-
     if action not in {"approved", "rejected"}:
         flash("Invalid action", "danger")
         return redirect(url_for("admin.sitter_list"))
-
     sitter.verification_status = action
     sitter.verified = action == "approved"
     db.session.commit()
-
     flash(f"Sitter {action} successfully!", "success")
     return redirect(url_for("admin.sitter_profile", sitter_id=sitter.id))
 
@@ -81,11 +124,9 @@ def verify_sitter(sitter_id, action):
 @admin_required
 def delete_user(user_id):
     user = User.query.get_or_404(user_id)
-
     if user.id == session.get("user_id"):
         flash("You cannot delete your own admin account.", "danger")
         return redirect(url_for("admin.dashboard"))
-
     db.session.delete(user)
     db.session.commit()
     flash("User deleted successfully!", "success")
