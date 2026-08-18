@@ -1,8 +1,10 @@
+import os
+
 from flask import Flask
-from config import *
-from utils.db import db
-from flask_migrate import Migrate
 from flask_mail import Mail
+from flask_migrate import Migrate
+
+from utils.db import db
 
 # Blueprints
 from routes.auth import auth_bp
@@ -13,16 +15,15 @@ from routes.community import community_bp
 from routes.admin import admin_bp
 from routes.main import main_bp
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object("config")
 
-    # Initialize DB
+    # Initialize extensions
     db.init_app(app)
-    migrate = Migrate(app, db)
-
-    # Initialize Mail
-    mail = Mail(app)
+    Migrate(app, db)
+    Mail(app)
 
     # Register blueprints
     app.register_blueprint(auth_bp)
@@ -35,7 +36,10 @@ def create_app():
 
     return app
 
+
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Debug mode is opt-in for local development and is disabled by default.
+    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() in {"1", "true", "yes"}
+    app.run(debug=debug_mode)
