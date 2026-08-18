@@ -1,4 +1,4 @@
-# Angadi_Bhavana_COMP_699_C
+# Mine_Bhavana_
 🎟 Happy Tails – Pet Care Management System
 A web-based platform that connects pet owners, sitters, sellers, and community helpers in one system.
 
