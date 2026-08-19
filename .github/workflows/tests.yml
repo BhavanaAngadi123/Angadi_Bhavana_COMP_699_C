@@ -1,15 +1,13 @@
-name: Java Build
+name: Java CI
 
 on:
   push:
-    branches:
-      - java-spring-boot-migration
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -20,5 +18,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Compile Spring Boot application
+      - name: Run unit and integration tests
+        run: mvn -B clean test
+      - name: Build application package
         run: mvn -B -DskipTests package
