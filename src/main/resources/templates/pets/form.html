@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Add Pet | Happy Tails</title></head>
+<body>
+<main>
+  <h1>Add Pet</h1>
+  <form th:action="@{/pets}" th:object="${pet}" method="post">
+    <label>Name <input th:field="*{name}" required></label><div th:errors="*{name}"></div><br>
+    <label>Species
+      <select th:field="*{species}" required>
+        <option value="">Choose</option>
+        <option th:each="item : ${species}" th:value="${item}" th:text="${item}"></option>
+      </select>
+    </label><div th:errors="*{species}"></div><br>
+    <label>Breed <input th:field="*{breed}"></label><br>
+    <label>Age <input type="number" min="0" th:field="*{age}" required></label><div th:errors="*{age}"></div><br>
+    <label>Medical history <textarea th:field="*{medicalHistory}"></textarea></label><br>
+    <label>Image URL <input type="url" th:field="*{image}"></label><br>
+    <button type="submit">Save pet</button>
+  </form>
+  <p><a th:href="@{/pets}">Back to pets</a></p>
+</main>
+</body>
+</html>

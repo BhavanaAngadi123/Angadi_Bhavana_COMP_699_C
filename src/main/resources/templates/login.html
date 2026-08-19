@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sign in | Happy Tails</title></head>
+<body>
+<main>
+  <h1>Sign in</h1>
+  <p th:if="${param.registered}">Account created. Sign in below.</p>
+  <p th:if="${param.error}">Invalid email or password.</p>
+  <form th:action="@{/login}" method="post">
+    <label>Email <input type="email" name="email" required></label><br>
+    <label>Password <input type="password" name="password" required></label><br>
+    <button type="submit">Sign in</button>
+  </form>
+  <p><a th:href="@{/register}">Create an account</a></p>
+</main>
+</body>
+</html>
