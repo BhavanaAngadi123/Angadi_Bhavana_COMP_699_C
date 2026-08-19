@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: happytails
+      POSTGRES_USER: happytails
+      POSTGRES_PASSWORD: happytails
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U happytails -d happytails"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/happytails
+      SPRING_DATASOURCE_USERNAME: happytails
+      SPRING_DATASOURCE_PASSWORD: happytails
+      DDL_AUTO: update
+    ports:
+      - "8080:8080"

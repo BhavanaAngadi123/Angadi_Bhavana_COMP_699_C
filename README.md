@@ -1,106 +1,117 @@
 # Happy Tails 🐾
 
-## Java Spring Boot Pet Care Platform
+**Full-stack pet-care platform built with Java 17 and Spring Boot.**
 
-Happy Tails is a full-stack pet care management platform built with Java 17 and Spring Boot. It brings pet owners, sitters, sellers, and community workflows into one application, covering pet profiles, sitter bookings, marketplace operations, lost-pet reporting, sightings, authentication, and REST APIs.
+Happy Tails brings pet profiles, sitter discovery and booking, marketplace workflows, lost-pet reporting, sightings, and account security into one application. The project is structured as a production-style Java backend with server-rendered UI, REST endpoints, relational persistence, automated tests, API documentation, containerization, and CI.
 
 ## Tech Stack
 
 - Java 17
-- Spring Boot
-- Spring MVC
-- Spring Data JPA
-- Spring Security
-- Thymeleaf
-- MySQL / PostgreSQL
+- Spring Boot 3
+- Spring MVC + Thymeleaf
+- Spring Security + BCrypt
+- Spring Data JPA / Hibernate
+- REST APIs
+- PostgreSQL / MySQL
 - Maven
-- HTML, CSS, JavaScript
-- Spring Mail
+- JUnit 5 + Spring Boot Test
+- OpenAPI / Swagger UI
+- Docker + Docker Compose
 - GitHub Actions
 
-## Core Features
+## Core Capabilities
 
-- User registration, login, logout, and BCrypt password security
-- Pet profile creation, listing, and deletion
-- Pet sitter management
-- Booking workflows
+- User registration, authentication, and role-based security foundation
+- Pet profile creation and management
+- Sitter and booking domain workflows
 - Marketplace products and orders
-- Lost pet and sighting workflows
+- Lost-pet and sighting workflows
 - Messaging domain model
-- Authenticated REST APIs
-- Environment-based database configuration
-- MySQL and PostgreSQL/Supabase-compatible persistence
-- Java CI build with GitHub Actions
+- Authenticated platform REST APIs
+- Environment-based database and email configuration
+
+## Architecture
+
+```mermaid
+flowchart LR
+    UI[Thymeleaf Web UI] --> MVC[Spring MVC Controllers]
+    CLIENT[API Client] --> API[REST Controllers]
+    MVC --> SEC[Spring Security]
+    API --> SEC
+    SEC --> JPA[Spring Data JPA]
+    JPA --> DB[(PostgreSQL / MySQL)]
+    MVC --> MAIL[Spring Mail]
+```
 
 ## Project Structure
 
 ```text
-src/main/java/com/happytails/
-├── config/
-├── controller/
-├── model/
-├── repository/
-└── HappyTailsApplication.java
-
-src/main/resources/
-├── templates/
-├── static/
-└── application.properties
-
-pom.xml
-Procfile
-.env.example
+src/
+├── main/
+│   ├── java/com/happytails/
+│   │   ├── config/
+│   │   ├── controller/
+│   │   ├── model/
+│   │   ├── repository/
+│   │   └── web/
+│   └── resources/
+│       ├── templates/
+│       └── application.properties
+└── test/
+    ├── java/com/happytails/
+    └── resources/
 ```
 
 ## Run Locally
 
-### Requirements
-
-- Java 17+
-- Maven 3.9+
-- MySQL 8+ or PostgreSQL
-
-### Configure the database
-
-Set environment variables such as:
-
-```text
-SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/happytails
-SPRING_DATASOURCE_USERNAME=root
-SPRING_DATASOURCE_PASSWORD=your-password
-DDL_AUTO=update
-```
-
-For PostgreSQL/Supabase, use a JDBC PostgreSQL URL instead.
-
-### Build
+### Option 1 — Docker Compose
 
 ```bash
-mvn clean package
+docker compose up --build
 ```
 
-### Run
+Open `http://localhost:8080`.
+
+### Option 2 — Maven
+
+Create a PostgreSQL or MySQL database and configure environment variables from `.env.example`, then run:
 
 ```bash
 mvn spring-boot:run
 ```
 
-The application starts on port `8080` by default and also respects the `PORT` environment variable in deployed environments.
+## API Documentation
 
-## CI
+With the application running, Swagger UI is available at:
 
-GitHub Actions compiles the Spring Boot application using Java 17 and Maven on pull requests and pushes.
+```text
+http://localhost:8080/swagger-ui/index.html
+```
 
-## Security
+OpenAPI JSON is available at:
 
-Credentials and secrets are supplied through environment variables. Do not commit real database passwords, email credentials, or production secrets.
+```text
+http://localhost:8080/v3/api-docs
+```
 
-## Migration Note
+## Tests
 
-This repository originated as a Python/Flask academic project and was migrated to Java 17 and Spring Boot. The Java/Spring Boot application is now the primary implementation. Legacy Flask source remains in the repository only as migration history and should not be used as the runtime entry point.
+```bash
+mvn clean test
+```
+
+Repository and persistence tests use an isolated H2 test database. GitHub Actions runs the test suite and packages the Spring Boot application on every pull request to `main`.
+
+## Deployment
+
+The application includes a multi-stage Dockerfile and environment-based production configuration. PostgreSQL and MySQL drivers are included for deployment flexibility.
+
+## Legacy Version
+
+The original Flask/Python implementation is preserved separately in the `legacy-flask` branch. The default Java codebase intentionally contains only the Spring Boot implementation so the repository accurately reflects the current architecture.
 
 ## Author
 
 **Bhavana Angadi**
 
-Software engineering project demonstrating Java backend development, Spring Boot, relational data modeling, authentication, REST APIs, and multi-module application design.
+Software engineering project focused on Java backend development, secure web applications, relational persistence, REST APIs, testing, containerization, and CI/CD.
